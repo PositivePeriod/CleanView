@@ -9,11 +9,10 @@ app.use(cors());
 
 const doAsync = fn => async (req, res, next) => await fn(req, res, next).catch(next);
 app.get("/news/*", doAsync(async function (req, res, next) {
-    var newsUrl = req.url.slice(6);
-    console.log("news", newsUrl);
-    var viewer = new NewsViewer(newsUrl);
-    if (viewer.content) { res.render("news", { "time": Date.now().toString(), "url": newsUrl, "content": await viewer.content() }); } else { res.send(await viewer.html); }
-
+    var viewer = new NewsViewer(req.url.slice(6));
+    var content = await viewer.content();
+    if (content) { res.render("news", { "time": new Date().toString(), "content": content }); }
+    else { res.send(await viewer.html()); }
 }));
 
 app.use((req, res, next) => {

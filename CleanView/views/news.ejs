@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge, chrome-1" />
+    <meta name="title" content="<%= content.title %>" />
+    <meta name="author" content="<%= content.author %>">
+    <title>Clean View | <%= content.title %></title>
+
+</head>
+
+<body>
+    <h3>Time : <%= time %></h3>
+    <h3>URL : <a href="<%= url %>"><%= url %></a></h3>
+    <% var captialize = (str) => str.charAt(0).toUpperCase() + str.slice(1) %> 
+    <% for ( let [key, value] of content ) { %>
+        <h3><%= captialize(key) %> : <%= value %></h3>
+    <% } %>
+    <script>
+        const DOMStrDict = new Map([["&", "&amp;"], ['"', "&quot;"], ['"', "&#39;"], ['<', "&lt;"], ['>', "&gt;"]])
+        const DOMtoStr = (str) => { for (const [key, value] of DOMStrDict) { str = str.replaceAll(key, value); } return str }
+        const StrtoDOM = (str) => { for (const [key, value] of DOMStrDict) { str = str.replaceAll(value, key); } return str }
+        document.body.insertAdjacentHTML("afterend", StrtoDOM(`<%= content.get("body") %>`) );
+    </script>
+</body>
+
+</html>
